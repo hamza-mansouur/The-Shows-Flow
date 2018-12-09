@@ -21,6 +21,7 @@ import com.example.macbook.theshowsflow.R;
 import com.takusemba.multisnaprecyclerview.MultiSnapRecyclerView;
 import com.takusemba.multisnaprecyclerview.OnSnapListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -45,6 +46,7 @@ public class ShowDetailActivity extends AppCompatActivity {
     static Show show;
     ShowsRepository showsRepository;
     private SmilarShowAdapter adapter;
+    private List<Show> similarShows = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +65,8 @@ public class ShowDetailActivity extends AppCompatActivity {
         showsRepository.getSimilarShows(show.getId(),new OnGetShowsCallback() {
             @Override
             public void onSuccess(List<Show> shows) {
-                adapter = new SmilarShowAdapter(getApplicationContext(), shows);
+                similarShows=shows;
+                adapter = new SmilarShowAdapter(getApplicationContext(), similarShows);
                 multiSnapRecyclerView.setAdapter(adapter);
             }
 
@@ -79,6 +82,8 @@ public class ShowDetailActivity extends AppCompatActivity {
         multiSnapRecyclerView.setOnSnapListener(new OnSnapListener() {
             @Override
             public void snapped(int position) {
+                show=similarShows.get(position);
+                setActivityComponents();
             }
         });
     }
